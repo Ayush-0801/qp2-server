@@ -30,14 +30,14 @@
      'user-follow-modify'
    ];
  
-//  const port = process.env.PORT || '5000';
- const port = '8888';
+ const port = process.env.PORT || '5000';
+//  const port = '8888';
 
  //Initialising the SpotifyAPI node package
  var spotifyApi = new SpotifyWebApi({
      clientId: 'e5528e5bb8b24755ad89dbc0eae5bea8',
      clientSecret: 'c265137ac990469890c0b7e447d5ca23',
-     redirectUri: 'http://localhost:8888/callback'
+     redirectUri: 'https://qp2-server.herokuapp.com/callback'
  });
  
  var access_token;
@@ -149,6 +149,6 @@
  
  app.listen(port, () =>
     console.log(
-      'HTTP Server up. Now go to http://localhost:8888 in your browser.'
+      'HTTP Server up. Now go to http://localhost:${port} in your browser.'
     )
   );
