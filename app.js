@@ -37,7 +37,7 @@
  var spotifyApi = new SpotifyWebApi({
      clientId: 'e5528e5bb8b24755ad89dbc0eae5bea8',
      clientSecret: 'c265137ac990469890c0b7e447d5ca23',
-     redirectUri: 'https://qp2-server.herokuapp.com/callback'
+     redirectUri: 'https://qp1-server.herokuapp.com/callback'
  });
  
  var access_token;
@@ -97,7 +97,6 @@
  
  //Play the song , finds the active spotify player if device id not specified
  app.post('/playback',async (req, res) => {
-  console.log("Kya kr rha hai")
    res.setHeader('Content-Type', 'application/json');
    const play= await spotifyApi.play({
       "uris": req.body.song,
@@ -109,6 +108,13 @@
        //if the user making the request is non-premium, a 403 FORBIDDEN response code will be returned
        console.log('Something went wrong!', err);
    });
+ });
+
+ app.post('/seek',async (req, res) => {
+  res.setHeader('Content-Type', 'application/json');
+  const seek= await spotifyApi.seek({
+    "position_ms":req.body.seek
+  });
  });
  
  // Gets the state of the active player to check if song has ended or playing
@@ -122,16 +128,16 @@
          {
            wot=1;
            console.log('Finished Playing: ' + data.body.item.name);
-           res.send({song:data.body.item.name,state:"ended"}); 
+           res.send({song:data.body.item.id,state:"ended", seek:data.body.item.progress_ms}); 
          }
          else
          {
-           res.send({song:data.body.item.name,state:"playing"});
-         }
+           res.send({song:data.body.item.id,state:"playing", seek:data.body.item.progress_ms});
+         } 
        }
        else
        {
-         res.send({song:null,state:"unknown"})
+         res.send({song:null,state:"unknown", seek:0})
        }
      }, function(err) {
        console.log('Something went wrong!', err);
